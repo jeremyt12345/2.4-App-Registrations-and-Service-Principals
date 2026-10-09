@@ -23,6 +23,15 @@ The reason why having different kinds of accounts for organizations is helpful i
 
 "Same Application (client) ID everywhere, a different service principal (and a different directory ID) in each tenant. That is the entire mechanism behind "sign in with your Microsoft work account" buttons all over the internet."
 
+
+Authentication Via Code
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 We as users just tap our Microsoft MFA notifiaction to authenticate but obviously a computer cannot do that...yet.
 
 A client secret is basically a password for your app. Its a string you generate on app registration and input in your script. This must always be secure in a secure place, anyone who has it can authtenticate as your app. Hence the "secret"
+
+
+A certificate is more secure and what Microsoft recommends. It is a  cryptographic credential.
+
+
+A managed identity is the safest because you dont run the risk of leaving the credential exposed anywhere. "Managed identity’s fix: Azure handles the whole credential lifecycle for you behind the scenes — creating it, rotating it, protecting it. You never see or touch the actual secret at all. You just tell a resource “use your managed identity” and Azure handles proving its identity internally. No secret for you to store, no secret to leak, nothing for an attacker to steal."
