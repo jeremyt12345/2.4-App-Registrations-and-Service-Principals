@@ -35,3 +35,15 @@ A certificate is more secure and what Microsoft recommends. It is a  cryptograph
 
 
 A managed identity is the safest because you dont run the risk of leaving the credential exposed anywhere. "Managed identity’s fix: Azure handles the whole credential lifecycle for you behind the scenes — creating it, rotating it, protecting it. You never see or touch the actual secret at all. You just tell a resource “use your managed identity” and Azure handles proving its identity internally. No secret for you to store, no secret to leak, nothing for an attacker to steal."
+
+
+<img width="1158" height="297" alt="image" src="https://github.com/user-attachments/assets/40d50424-a403-476e-a226-9b7958d6dc8a" />
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+What an App Can Actually Do
+
+An app authenticating is only half of what it can do and what you need to secure. After the authentication it still needs permissions to reach out to Microsoft Graph or your Azure Storage Account. The permissions would live in the app registration section. 
+
+
+Delegated permissions
