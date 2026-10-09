@@ -47,3 +47,36 @@ An app authenticating is only half of what it can do and what you need to secure
 
 
 Delegated permissions
+"Delegated permissions are the kind of permissions an app exercises/uses on behalf of a signed-in user. The user signs in, the app gets a token that represents itself as that user, and whatever the app does is limited to what that user could already do. If a delegated permission grants Mail.Read, the app can read the signed-in user's mail BUT not anyone else's."
+
+"Think about Microsoft Teams or Outlook integrating with a third-party app — say, a scheduling tool like Calendly that connects to someone’s Outlook calendar.
+
+When you (a user) go through that app’s “Connect your calendar” flow, you sign in with your Microsoft account and get a consent prompt saying something like “Calendly wants to: Read your calendar.” Once you approve, Calendly gets a token tied specifically to you. From that point on, Calendly can see your calendar and book meetings on your behalf — but it has zero visibility into anyone else’s calendar at EMS. If Josh or Daniel never went through that same consent flow, Calendly has no access to their calendars at all, even though it’s the exact same app."
+
+Application Permissions
+Are what it sounds like, the permissions are given to the app after it authenticates with the secret or cert.
+
+These two are very different in regards to security. A leaked credential on an app with delegated permissions gives the attacker access with usually just one user. On the other hand a leaked credential with app permissions that also may have ".All" give the attacker range of the whole tenant as an admin.
+
+<img width="1219" height="316" alt="image" src="https://github.com/user-attachments/assets/e7ee1f32-b9fd-4f70-aa4b-ea566ed2a868" />
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Where Tokens Land
+
+After a user authenticates, Entra ID sends them back to the app at a specific, pre-registered web address — that address is called the Redirect URI. It’s where the token actually gets delivered. 
+
+This next part I want to copy and paste straight from the source because the way it is explained is perfect and doesnt need to be simplfied or shortened:
+
+"The flow goes like this. A user clicks Sign in inside some app. The app sends the user's browser to login.microsoftonline.com with the app's Application (client) ID and the redirect URI it expects to come back to. The user signs in there with their password and MFA. Microsoft generates an authorization code, a short-lived string that proves "this user just successfully authenticated for this app." Microsoft then sends the user's browser back to the redirect URI, with the authorization code attached to the URL. The app receives the user, takes the code, and exchanges it (along with its client secret) for an access token that lets it call APIs as that user. Again, this is delegated permissions.
+
+
+
+Microsoft validates the redirect URI strictly. It must be an exact match against one of the URIs registered on the app registration. You cannot just ask Microsoft to send the code to any random URL. That validation is what stops random attackers from redirecting tokens to servers they control.
+
+
+
+But here is where the attack begins: if somebody can register a malicious redirect URI on a legitimate app, the validation passes for that URI. Anyone with edit rights on the app reg can do this: the app's Owners, a Cloud Application Administrator, an Application Administrator, etc. If a phisher compromises an Owner's account, they add https://attacker.example/callback to the app's redirect URI list, then send victims a sign-in link using that app's client ID. When a victim clicks it and signs in, the authorization code goes straight to the attacker's server. If the attacker also has the client secret, they trade the code for tokens that act as the victim. The user thinks they signed in to a legit app, because well...they did. The tokens just landed somewhere they should not have."
+
+<img width="1193" height="478" alt="image" src="https://github.com/user-attachments/assets/08cd7de4-76ab-4b56-bc1f-de0aa3f7cdf9" />
+
